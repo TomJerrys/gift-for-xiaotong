@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>给小彤的礼物</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+/* 修复后的样式 */
+:root {
+  --bg: #ffffff;
+  --text: #1a1a1a;
+  --subtext: #4d4d4d;
+  --border: #e5e5e5;
+  --shadow: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-heavy: 0 20px 48px rgba(0,0,0,0.16);
+  --overlay: rgba(0, 0, 0, 0.4);
+  --accent: #0078d4;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 50%, #dfe7f0 100%);
+  color: var(--text);
+  font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow: hidden;
+}
+
+#popup-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  width: min(92vw, 520px);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-heavy);
+  text-align: left;
+  overflow: hidden;
+  animation: modal-appear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.modal .titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal .titlebar .icon { font-size: 20px; }
+.modal .titlebar .title { font-weight: 800; font-size: 18px; }
+
+.modal .content { 
+  padding: 24px 20px; 
+  color: var(--subtext); 
+  font-size: 16px;
+  line-height: 1.6;
+}
+.modal .actions { 
+  padding: 0 20px 24px; 
+  display: flex; 
+  gap: 12px; 
+  justify-content: flex-end; 
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: .2px;
+  background: #f8f9fa;
+  transition: all 0.2s ease;
+  font-size: 15px;
+}
+
+.btn.primary { 
+  background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%); 
+  color: #fff; 
+  border-color: #005a9e; 
+}
+.btn:hover { 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.btn.primary:hover { 
+  background: linear-gradient(135deg, #005a9e 0%, #004578 100%);
+}
+.btn:active { transform: translateY(0); }
+
+.popup {
+  position: absolute;
+  width: 250px;
+  color: var(--text);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 12px 40px rgba(0,0,0,0.1);
+  font-size: 14px;
+  line-height: 1.4;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.popup .header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid var(--border);
+}
+.popup .header .icon { font-size: 14px; }
+.popup .header .title { 
+  font-weight: 800; 
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.popup .content { 
+  padding: 16px; 
+  color: var(--text); 
+  font-size: 18px; 
+  font-weight: 600; 
+  line-height: 1.4; 
+  text-align: center; 
+}
+
+/* 主题颜色 */
+.popup.theme-blue .header { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+.popup.theme-blue .content { background: #f1f8ff; }
+
+.popup.theme-green .header { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+.popup.theme-green .content { background: #f1f8e9; }
+
+.popup.theme-orange .header { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+.popup.theme-orange .content { background: #fff8e1; }
+
+.popup.theme-purple .header { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); }
+.popup.theme-purple .content { background: #f9f0ff; }
+
+.popup.theme-pink .header { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); }
+.popup.theme-pink .content { background: #fff0f5; }
+
+/* 动画效果 */
+@keyframes modal-appear {
+  0% { opacity: 0; transform: scale(0.7) translateY(-20px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes popup-from-top {
+  0% { opacity: 0; transform: scale(0.3) translateY(-60px); }
+  60% { opacity: 1; transform: scale(1.08) translateY(0); }
+  80% { transform: scale(0.95) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes popup-from-bottom {
+  0% { opacity: 0; transform: scale(0.3) translateY(60px); }
+  60% { opacity: 1; transform: scale(1.08) translateY(0); }
+  80% { transform: scale(0.95) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes popup-from-left {
+  0% { opacity: 0; transform: scale(0.3) translateX(-60px); }
+  60% { opacity: 1; transform: scale(1.08) translateX(0); }
+  80% { transform: scale(0.95) translateX(0); }
+  100% { opacity: 1; transform: scale(1) translateX(0); }
+}
+
+@keyframes popup-from-right {
+  0% { opacity: 0; transform: scale(0.3) translateX(60px); }
+  60% { opacity: 1; transform: scale(1.08) translateX(0); }
+  80% { transform: scale(0.95) translateX(0); }
+  100% { opacity: 1; transform: scale(1) translateX(0); }
+}
+
+@keyframes popup-zoom {
+  0% { opacity: 0; transform: scale(0.3); }
+  60% { opacity: 1; transform: scale(1.08); }
+  80% { transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes popup-float {
+  0% { opacity: 0; transform: scale(0.3) translateY(0) rotate(0deg); }
+  60% { opacity: 1; transform: scale(1.08) translateY(-10px) rotate(2deg); }
+  100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+}
+
+.anim-top { animation: popup-from-top 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-bottom { animation: popup-from-bottom 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-left { animation: popup-from-left 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-right { animation: popup-from-right 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-zoom { animation: popup-zoom 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-float { animation: popup-float 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@media (max-width: 640px) {
+  .popup { width: min(250px, 85vw); }
+  .popup .content { font-size: 16px; padding: 14px; }
+  .btn { height: 40px; padding: 0 20px; }
+}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="modal-backdrop" id="start-backdrop" aria-hidden="false">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="titlebar">
+          <span class="icon">🎁</span>
+          <span class="title" id="modal-title">给小彤的礼物</span>
+        </div>
+        <div class="content">
+          <p>亲爱的彤，</p>
+          <p>就像那天的大雪一样纯净美好，这份礼物送给你，希望你能感受到其中的温暖和心意。</p>
+          <p>愿你的每一天都充满阳光和欢笑，要天天开心哦！(/≧▽≦)/</p>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="confirm-btn" autofocus>开启惊喜</button>
+        </div>
+      </div>
+    </div>
+    <div id="popup-layer" aria-live="polite" aria-atomic="false"></div>
+  </div>
+
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="https://assets.mixkit.co/music/preview/mixkit-piano-melody-1-112.mp3" type="audio/mpeg">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-piano-melody-1-112.wav" type="audio/wav">
+  </audio>
+
+  <script>
+(function () {
+  const backdrop = document.getElementById("start-backdrop");
+  const confirmBtn = document.getElementById("confirm-btn");
+  const layer = document.getElementById("popup-layer");
+  const bgMusic = document.getElementById("bgMusic");
+
+  const messages = [
+    "愿你遍历山河，觉得人间值得",
+    "生活晴朗，万物可爱",
+    "今天也要加油鸭！",
+    "你是人间小可爱",
+    "累了就好好休息",
+    "记得按时吃饭",
+    "你是世间最温柔的星辰",
+    "愿所有美好，都如期而至",
+    "乾坤未定，你我皆黑马",
+    "每一步都算数",
+    "好好爱自己",
+    "保持微笑",
+    "多喝热水",
+    "记得开心",
+    "你是最棒的",
+    "梦想成真",
+    "一切顺利",
+    "心想事成",
+    "平安喜乐",
+    "万事胜意",
+    "健康快乐",
+    "好运常伴",
+    "愿你的世界充满阳光",
+    "愿每天都有小确幸",
+    "愿你被温柔以待",
+    "愿你心中有爱，眼里有光",
+    "未来可期",
+    "永远年轻，永远热泪盈眶",
+    "保持热爱，奔赴山海",
+    "温柔半两，从容一生"
+  ];
+
+  const themes = [
+    "theme-blue", "theme-green", "theme-orange", "theme-purple",
+    "theme-pink", "theme-blue", "theme-green", "theme-orange",
+    "theme-purple", "theme-pink", "theme-blue", "theme-green"
+  ];
+
+  const animations = [
+    "anim-top", "anim-bottom", "anim-left", "anim-right",
+    "anim-zoom", "anim-float"
+  ];
+
+  const icons = ["💝", "🎁", "✨", "⭐", "🌟", "💫", "🌸", "🎀", "💌", "💖"];
+
+  let spawnTimerId = null;
+  let totalPopups = 0;
+  const maxPopups = 1314; // 一生一世的浪漫数字
+  const spawnIntervalMs = 80;
+
+  function randomOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function random(min, max) { return Math.random() * (max - min) + min; }
+
+  function createPopup() {
+    if (totalPopups >= maxPopups) return;
+
+    const el = document.createElement("div");
+    el.className = `popup ${randomOf(themes)} ${randomOf(animations)}`;
+
+    const header = document.createElement("div");
+    header.className = "header";
+    const icon = document.createElement("span");
+    icon.className = "icon";
+    icon.textContent = randomOf(icons);
+    const hTitle = document.createElement("span");
+    hTitle.className = "title";
+    hTitle.textContent = "给小彤的祝福";
+    header.appendChild(icon);
+    header.appendChild(hTitle);
+
+    const content = document.createElement("div");
+    content.className = "content";
+    content.textContent = randomOf(messages);
+
+    el.appendChild(header);
+    el.appendChild(content);
+    
+    const { innerWidth: vw, innerHeight: vh } = window;
+    const popupWidth = 250;
+    const popupHeight = 85;
+    const pad = 20;
+    
+    const left = Math.floor(random(pad, Math.max(pad, vw - popupWidth - pad)));
+    const top = Math.floor(random(pad, Math.max(pad, vh - popupHeight - pad)));
+    const rot = Math.floor(random(-8, 8));
+
+    el.style.left = left + "px";
+    el.style.top = top + "px";
+    el.style.transform = `rotate(${rot}deg)`;
+    el.style.zIndex = String(100 + totalPopups);
+    
+    layer.appendChild(el);
+
+    totalPopups += 1;
+    
+    // 每创建一定数量的弹窗，添加一个特殊效果
+    if (totalPopups % 100 === 0) {
+      el.style.transform = `rotate(${rot}deg) scale(1.2)`;
+      el.style.boxShadow = "0 0 30px rgba(255,0,255,0.5)";
+    }
+  }
+
+  function startSpawning() {
+    if (spawnTimerId) return;
+    
+    // 首先快速创建一批弹窗
+    for (let i = 0; i < 20; i++) {
+      setTimeout(() => createPopup(), i * 30);
+    }
+    
+    // 然后持续创建
+    spawnTimerId = setInterval(() => {
+      createPopup();
+      if (totalPopups >= maxPopups) {
+        clearInterval(spawnTimerId);
+        spawnTimerId = null;
+        // 全部创建完成后添加一个完成消息
+        setTimeout(() => {
+          const completionMsg = document.createElement("div");
+          completionMsg.className = "popup theme-blue anim-zoom";
+          completionMsg.style.cssText = `
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+            width: 300px;
+          `;
+          completionMsg.innerHTML = `
+            <div class="header">
+              <span class="icon">🎉</span>
+              <span class="title">礼物完成！</span>
+            </div>
+            <div class="content">
+              已送出 ${maxPopups} 个祝福<br>
+              愿小彤永远幸福！
+            </div>
+          `;
+          layer.appendChild(completionMsg);
+        }, 500);
+      }
+    }, spawnIntervalMs);
+  }
+
+  function openGift() {
+    backdrop.setAttribute("aria-hidden", "true");
+    backdrop.style.display = "none";
+    
+    // 尝试播放背景音乐
+    bgMusic.volume = 0.4;
+    
+    // 使用用户交互来播放音乐
+    const playMusic = () => {
+      bgMusic.play().catch(err => {
+        console.log("音乐播放需要用户交互:", err);
+      });
+    };
+    
+    // 立即尝试播放
+    playMusic();
+    
+    // 添加一个提示，告诉用户可以点击页面播放音乐
+    const musicHint = document.createElement("div");
+    musicHint.className = "popup theme-green anim-bottom";
+    musicHint.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10000;
+      width: 200px;
+      pointer-events: auto;
+      cursor: pointer;
+    `;
+    musicHint.innerHTML = `
+      <div class="header">
+        <span class="icon">🎵</span>
+        <span class="title">点击播放音乐</span>
+      </div>
+      <div class="content">轻柔钢琴曲</div>
+    `;
+    musicHint.addEventListener("click", () => {
+      playMusic();
+      musicHint.remove();
+    });
+    layer.appendChild(musicHint);
+    
+    startSpawning();
+  }
+
+  confirmBtn.addEventListener("click", openGift);
+  
+  // 按Enter键也可以确认
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && backdrop.getAttribute("aria-hidden") === "false") {
+      openGift();
+    }
+  });
+  
+  // 点击背景也可以关闭（可选）
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) {
+      openGift();
+    }
+  });
+})();
+  </script>
+</body>
+</html>

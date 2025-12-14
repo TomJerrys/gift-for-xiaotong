@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>给小彤的礼物</title>
+  <title>一份神秘礼物</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-/* 修复后的样式 */
 :root {
   --bg: #ffffff;
   --text: #1a1a1a;
@@ -17,7 +16,7 @@
   --shadow: 0 8px 24px rgba(0,0,0,0.12);
   --shadow-heavy: 0 20px 48px rgba(0,0,0,0.16);
   --overlay: rgba(0, 0, 0, 0.4);
-  --accent: #0078d4;
+  --accent: #0078d4; /* Windows 蓝 */
 }
 
 * { box-sizing: border-box; }
@@ -26,16 +25,17 @@ body {
   margin: 0;
   background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 50%, #dfe7f0 100%);
   color: var(--text);
-  font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Noto Sans SC", Segoe UI, system-ui, -apple-system, Roboto, Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   overflow: hidden;
 }
 
 #popup-layer {
   position: fixed;
   inset: 0;
-  pointer-events: none;
+  pointer-events: none; /* 允许下层点击通过（初始 modal 期间被遮罩覆盖） */
 }
 
+/* 入场弹窗 */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -49,7 +49,7 @@ body {
   width: min(92vw, 520px);
   background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: var(--shadow-heavy);
   text-align: left;
   overflow: hidden;
@@ -60,174 +60,303 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 12px 14px;
+  background: #f3f3f3;
   border-bottom: 1px solid var(--border);
 }
 
-.modal .titlebar .icon { font-size: 20px; }
-.modal .titlebar .title { font-weight: 800; font-size: 18px; }
+.modal .titlebar .icon { font-size: 18px; }
+.modal .titlebar .title { font-weight: 700; }
 
-.modal .content { 
-  padding: 24px 20px; 
-  color: var(--subtext); 
-  font-size: 16px;
-  line-height: 1.6;
-}
-.modal .actions { 
-  padding: 0 20px 24px; 
-  display: flex; 
-  gap: 12px; 
-  justify-content: flex-end; 
-}
+.modal .content { padding: 16px 16px 8px; color: var(--subtext); }
+.modal .actions { padding: 0 16px 16px; display: flex; gap: 10px; justify-content: flex-end; }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 44px;
-  padding: 0 24px;
-  border-radius: 8px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 4px;
   border: 1px solid var(--border);
   cursor: pointer;
   font-weight: 600;
   letter-spacing: .2px;
-  background: #f8f9fa;
-  transition: all 0.2s ease;
-  font-size: 15px;
+  background: #f7f7f7;
 }
 
-.btn.primary { 
-  background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%); 
-  color: #fff; 
-  border-color: #005a9e; 
-}
-.btn:hover { 
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.btn.primary:hover { 
-  background: linear-gradient(135deg, #005a9e 0%, #004578 100%);
-}
-.btn:active { transform: translateY(0); }
+.btn.primary { background: var(--accent); color: #fff; border-color: #0a6ecf; }
+.btn:hover { filter: brightness(0.98); }
+.btn.primary:hover { filter: brightness(1.05); }
+.btn:active { transform: translateY(1px); }
 
+/* 屏幕弹窗（温馨提示） */
 .popup {
   position: absolute;
-  width: 250px;
+  width: 230px;
   color: var(--text);
   background: #ffffff;
-  border-radius: 12px;
+  border-radius: 7px;
   border: 1px solid var(--border);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 12px 40px rgba(0,0,0,0.1);
-  font-size: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15), 0 8px 32px rgba(0,0,0,0.08);
+  font-size: 13px;
   line-height: 1.4;
   pointer-events: none;
   user-select: none;
   transform-origin: center;
   overflow: hidden;
-  backdrop-filter: blur(10px);
 }
 
 .popup .header {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: #f8f9fa;
+  gap: 4px;
+  padding: 3px 8px;
+  background: #f3f3f3;
   border-bottom: 1px solid var(--border);
 }
-.popup .header .icon { font-size: 14px; }
-.popup .header .title { 
-  font-weight: 800; 
-  font-size: 12px;
-  letter-spacing: 0.5px;
-}
+.popup .header .icon { font-size: 12px; }
+.popup .header .title { font-weight: 800; font-size: 11px; }
 
-.popup .content { 
-  padding: 16px; 
-  color: var(--text); 
-  font-size: 18px; 
-  font-weight: 600; 
-  line-height: 1.4; 
-  text-align: center; 
-}
+.popup .content { padding: 6px 10px; color: var(--text); font-size: 18px; font-weight: 600; line-height: 1.25; text-align: center; }
 
-/* 主题颜色 */
-.popup.theme-blue .header { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+/* 不同颜色主题的弹窗背景 */
+.popup.theme-blue .header { background: #e3f2fd; border-bottom-color: #bbdefb; }
 .popup.theme-blue .content { background: #f1f8ff; }
 
-.popup.theme-green .header { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
-.popup.theme-green .content { background: #f1f8e9; }
+.popup.theme-green .header { background: #e8f5e9; border-bottom-color: #c8e6c9; }
+.popup.theme-green .content { background: #f1f8f4; }
 
-.popup.theme-orange .header { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
-.popup.theme-orange .content { background: #fff8e1; }
+.popup.theme-orange .header { background: #fff3e0; border-bottom-color: #ffe0b2; }
+.popup.theme-orange .content { background: #fffaf3; }
 
-.popup.theme-purple .header { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); }
-.popup.theme-purple .content { background: #f9f0ff; }
+.popup.theme-purple .header { background: #f3e5f5; border-bottom-color: #e1bee7; }
+.popup.theme-purple .content { background: #faf5fc; }
 
-.popup.theme-pink .header { background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%); }
+.popup.theme-pink .header { background: #fce4ec; border-bottom-color: #f8bbd0; }
 .popup.theme-pink .content { background: #fff0f5; }
+
+.popup.theme-yellow .header { background: #fffde7; border-bottom-color: #fff9c4; }
+.popup.theme-yellow .content { background: #fffef7; }
+
+.popup.theme-cyan .header { background: #e0f7fa; border-bottom-color: #b2ebf2; }
+.popup.theme-cyan .content { background: #f0fcff; }
+
+.popup.theme-lime .header { background: #f9fbe7; border-bottom-color: #f0f4c3; }
+.popup.theme-lime .content { background: #fdfef8; }
+
+.popup.theme-red .header { background: #ffebee; border-bottom-color: #ffcdd2; }
+.popup.theme-red .content { background: #fff5f5; }
+
+.popup.theme-teal .header { background: #e0f2f1; border-bottom-color: #b2dfdb; }
+.popup.theme-teal .content { background: #f0faf9; }
+
+.popup.theme-indigo .header { background: #e8eaf6; border-bottom-color: #c5cae9; }
+.popup.theme-indigo .content { background: #f3f4fb; }
+
+.popup.theme-amber .header { background: #fff8e1; border-bottom-color: #ffecb3; }
+.popup.theme-amber .content { background: #fffef5; }
+
+.popup.theme-rose .header { background: #fce4ec; border-bottom-color: #f8bbd0; }
+.popup.theme-rose .content { background: #fef5f8; }
+
+.popup.theme-mint .header { background: #e8f8f5; border-bottom-color: #c8ebe3; }
+.popup.theme-mint .content { background: #f5fcfa; }
+
+.popup.theme-peach .header { background: #fff0e5; border-bottom-color: #ffe0c7; }
+.popup.theme-peach .content { background: #fffaf5; }
+
+.popup.theme-lavender .header { background: #f0ebf8; border-bottom-color: #ddd0f0; }
+.popup.theme-lavender .content { background: #f9f6fc; }
+
+.popup.theme-coral .header { background: #ffe4e1; border-bottom-color: #ffc4bd; }
+.popup.theme-coral .content { background: #fff7f6; }
+
+.popup.theme-sky .header { background: #e1f5fe; border-bottom-color: #b3e5fc; }
+.popup.theme-sky .content { background: #f0fbff; }
+
+.popup.theme-lemon .header { background: #fffef0; border-bottom-color: #fff9c8; }
+.popup.theme-lemon .content { background: #fffffa; }
+
+@media (max-width: 640px) {
+  .popup { width: min(230px, 85vw); font-size: 13px; }
+  .popup .content { font-size: 16px; }
+}
 
 /* 动画效果 */
 @keyframes modal-appear {
-  0% { opacity: 0; transform: scale(0.7) translateY(-20px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
+/* 从上方弹出 */
 @keyframes popup-from-top {
-  0% { opacity: 0; transform: scale(0.3) translateY(-60px); }
-  60% { opacity: 1; transform: scale(1.08) translateY(0); }
-  80% { transform: scale(0.95) translateY(0); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(-60px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+  }
+  80% {
+    transform: scale(0.95) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
+/* 从下方弹出 */
 @keyframes popup-from-bottom {
-  0% { opacity: 0; transform: scale(0.3) translateY(60px); }
-  60% { opacity: 1; transform: scale(1.08) translateY(0); }
-  80% { transform: scale(0.95) translateY(0); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(60px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(0);
+  }
+  80% {
+    transform: scale(0.95) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
+/* 从左边弹出 */
 @keyframes popup-from-left {
-  0% { opacity: 0; transform: scale(0.3) translateX(-60px); }
-  60% { opacity: 1; transform: scale(1.08) translateX(0); }
-  80% { transform: scale(0.95) translateX(0); }
-  100% { opacity: 1; transform: scale(1) translateX(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateX(-60px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateX(0);
+  }
+  80% {
+    transform: scale(0.95) translateX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
 }
 
+/* 从右边弹出 */
 @keyframes popup-from-right {
-  0% { opacity: 0; transform: scale(0.3) translateX(60px); }
-  60% { opacity: 1; transform: scale(1.08) translateX(0); }
-  80% { transform: scale(0.95) translateX(0); }
-  100% { opacity: 1; transform: scale(1) translateX(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateX(60px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateX(0);
+  }
+  80% {
+    transform: scale(0.95) translateX(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
 }
 
-@keyframes popup-zoom {
-  0% { opacity: 0; transform: scale(0.3); }
-  60% { opacity: 1; transform: scale(1.08); }
-  80% { transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1); }
+/* 从左上角弹出 */
+@keyframes popup-from-topleft {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translate(-50px, -50px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translate(0, 0);
+  }
+  80% {
+    transform: scale(0.95) translate(0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
 }
 
-@keyframes popup-float {
-  0% { opacity: 0; transform: scale(0.3) translateY(0) rotate(0deg); }
-  60% { opacity: 1; transform: scale(1.08) translateY(-10px) rotate(2deg); }
-  100% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
+/* 从右上角弹出 */
+@keyframes popup-from-topright {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translate(50px, -50px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translate(0, 0);
+  }
+  80% {
+    transform: scale(0.95) translate(0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
 }
 
+/* 从左下角弹出 */
+@keyframes popup-from-bottomleft {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translate(-50px, 50px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translate(0, 0);
+  }
+  80% {
+    transform: scale(0.95) translate(0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+/* 从右下角弹出 */
+@keyframes popup-from-bottomright {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translate(50px, 50px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translate(0, 0);
+  }
+  80% {
+    transform: scale(0.95) translate(0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+/* 动画类 */
 .anim-top { animation: popup-from-top 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .anim-bottom { animation: popup-from-bottom 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .anim-left { animation: popup-from-left 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 .anim-right { animation: popup-from-right 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-.anim-zoom { animation: popup-zoom 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-.anim-float { animation: popup-float 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-
-@media (max-width: 640px) {
-  .popup { width: min(250px, 85vw); }
-  .popup .content { font-size: 16px; padding: 14px; }
-  .btn { height: 40px; padding: 0 20px; }
-}
+.anim-topleft { animation: popup-from-topleft 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-topright { animation: popup-from-topright 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-bottomleft { animation: popup-from-bottomleft 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.anim-bottomright { animation: popup-from-bottomright 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
   </style>
 </head>
 <body>
@@ -235,25 +364,20 @@ body {
     <div class="modal-backdrop" id="start-backdrop" aria-hidden="false">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="titlebar">
-          <span class="icon">🎁</span>
-          <span class="title" id="modal-title">给小彤的礼物</span>
+          <span class="icon">😈</span>
+          <span class="title" id="modal-title">神秘礼物</span>
         </div>
-        <div class="content">
-          <p>亲爱的彤，</p>
-          <p>就像那天的大雪一样纯净美好，这份礼物送给你，希望你能感受到其中的温暖和心意。</p>
-          <p>愿你的每一天都充满阳光和欢笑，要天天开心哦！(/≧▽≦)/</p>
-        </div>
+        <div class="content">亲爱的彤，送给你</div>
         <div class="actions">
-          <button class="btn primary" id="confirm-btn" autofocus>开启惊喜</button>
+          <button class="btn primary" id="confirm-btn" autofocus>确定</button>
         </div>
       </div>
     </div>
     <div id="popup-layer" aria-live="polite" aria-atomic="false"></div>
   </div>
 
-  <audio id="bgMusic" preload="auto" loop>
-    <source src="https://assets.mixkit.co/music/preview/mixkit-piano-melody-1-112.mp3" type="audio/mpeg">
-    <source src="https://assets.mixkit.co/music/preview/mixkit-piano-melody-1-112.wav" type="audio/wav">
+  <audio id="bgMusic" preload="auto">
+    <source src="https://sf3-cdn-tos.douyinstatic.com/obj/ies-music/7563635360773737266.mp3" type="audio/mpeg">
   </audio>
 
   <script>
@@ -263,56 +387,53 @@ body {
   const layer = document.getElementById("popup-layer");
   const bgMusic = document.getElementById("bgMusic");
 
+  /**
+   * 温馨提示语（尽量去重、纠正引号并增强正向表达）
+   */
   const messages = [
-    "愿你遍历山河，觉得人间值得",
-    "生活晴朗，万物可爱",
-    "今天也要加油鸭！",
-    "你是人间小可爱",
-    "累了就好好休息",
-    "记得按时吃饭",
-    "你是世间最温柔的星辰",
-    "愿所有美好，都如期而至",
-    "乾坤未定，你我皆黑马",
-    "每一步都算数",
+    "多喝水哦~",
+    "保持微笑呀",
+    "每天都要元气满满",
+    "记得吃水果",
+    "保持好心情",
     "好好爱自己",
-    "保持微笑",
-    "多喝热水",
-    "记得开心",
-    "你是最棒的",
+    "我想你了",
+    "我想你了",
     "梦想成真",
-    "一切顺利",
-    "心想事成",
-    "平安喜乐",
-    "万事胜意",
-    "健康快乐",
-    "好运常伴",
-    "愿你的世界充满阳光",
-    "愿每天都有小确幸",
-    "愿你被温柔以待",
-    "愿你心中有爱，眼里有光",
-    "未来可期",
-    "永远年轻，永远热泪盈眶",
-    "保持热爱，奔赴山海",
-    "温柔半两，从容一生"
+    "期待下一次见面",
+    "金榜题名",
+    "金榜题名",
+    "别太累啦，偶尔偷懒也好",
+    "要相信自己奥",
+    "你超棒的",
+    "记得好好护肤",
+    "珍惜每一刻",
+    "学会爱自己，才能更好地爱别人",
+    "顺顺利利",
+    "早点休息",
+    "愿所有烦恼都消失",
+    "别熬夜",
+    "今天过得开心嘛",
+    "天冷了，多穿衣服",
   ];
 
   const themes = [
     "theme-blue", "theme-green", "theme-orange", "theme-purple",
-    "theme-pink", "theme-blue", "theme-green", "theme-orange",
-    "theme-purple", "theme-pink", "theme-blue", "theme-green"
+    "theme-pink", "theme-yellow", "theme-cyan", "theme-lime",
+    "theme-red", "theme-teal", "theme-indigo", "theme-amber",
+    "theme-rose", "theme-mint", "theme-peach", "theme-lavender",
+    "theme-coral", "theme-sky", "theme-lemon"
   ];
 
   const animations = [
     "anim-top", "anim-bottom", "anim-left", "anim-right",
-    "anim-zoom", "anim-float"
+    "anim-topleft", "anim-topright", "anim-bottomleft", "anim-bottomright"
   ];
-
-  const icons = ["💝", "🎁", "✨", "⭐", "🌟", "💫", "🌸", "🎀", "💌", "💖"];
 
   let spawnTimerId = null;
   let totalPopups = 0;
-  const maxPopups = 300; // 一生一世的浪漫数字
-  const spawnIntervalMs = 80;
+  const maxPopups = 420; // 防止浏览器卡死，但足以快速铺满
+  const spawnIntervalMs = 100; // 生成速度（越小越快）- 稍微加快
 
   function randomOf(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function random(min, max) { return Math.random() * (max - min) + min; }
@@ -327,10 +448,10 @@ body {
     header.className = "header";
     const icon = document.createElement("span");
     icon.className = "icon";
-    icon.textContent = randomOf(icons);
+    icon.textContent = "💝"; // 礼物图标，兼容性更好
     const hTitle = document.createElement("span");
     hTitle.className = "title";
-    hTitle.textContent = "给小彤的祝福";
+    hTitle.textContent = "亲爱的彤";
     header.appendChild(icon);
     header.appendChild(hTitle);
 
@@ -341,69 +462,36 @@ body {
     el.appendChild(header);
     el.appendChild(content);
     
+    // 先设置位置再添加到DOM，这样动画从正确位置开始
     const { innerWidth: vw, innerHeight: vh } = window;
-    const popupWidth = 250;
-    const popupHeight = 85;
-    const pad = 20;
+    // 固定宽度230px，估算高度约65px（进一步压缩）
+    const popupWidth = 230;
+    const popupHeight = 65;
+    const pad = 5;
     
+    // 完全随机分布在屏幕内 - 确保不超出边界
     const left = Math.floor(random(pad, Math.max(pad, vw - popupWidth - pad)));
     const top = Math.floor(random(pad, Math.max(pad, vh - popupHeight - pad)));
-    const rot = Math.floor(random(-8, 8));
+    const rot = Math.floor(random(-5, 5));
 
     el.style.left = left + "px";
     el.style.top = top + "px";
     el.style.transform = `rotate(${rot}deg)`;
-    el.style.zIndex = String(100 + totalPopups);
+    el.style.zIndex = String(100 + totalPopups); // 后生成的在上层
     
     layer.appendChild(el);
 
     totalPopups += 1;
-    
-    // 每创建一定数量的弹窗，添加一个特殊效果
-    if (totalPopups % 100 === 0) {
-      el.style.transform = `rotate(${rot}deg) scale(1.2)`;
-      el.style.boxShadow = "0 0 30px rgba(255,0,255,0.5)";
-    }
   }
 
   function startSpawning() {
     if (spawnTimerId) return;
-    
-    // 首先快速创建一批弹窗
-    for (let i = 0; i < 20; i++) {
-      setTimeout(() => createPopup(), i * 30);
-    }
-    
-    // 然后持续创建
+    // 一个一个稳定弹出，不连发
     spawnTimerId = setInterval(() => {
       createPopup();
       if (totalPopups >= maxPopups) {
         clearInterval(spawnTimerId);
         spawnTimerId = null;
-        // 全部创建完成后添加一个完成消息
-        setTimeout(() => {
-          const completionMsg = document.createElement("div");
-          completionMsg.className = "popup theme-blue anim-zoom";
-          completionMsg.style.cssText = `
-            position: fixed;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 99999;
-            width: 300px;
-          `;
-          completionMsg.innerHTML = `
-            <div class="header">
-              <span class="icon">🎉</span>
-              <span class="title">礼物完成！</span>
-            </div>
-            <div class="content">
-              已送出 ${maxPopups} 个祝福<br>
-              愿小彤永远幸福！
-            </div>
-          `;
-          layer.appendChild(completionMsg);
-        }, 500);
       }
     }, spawnIntervalMs);
   }
@@ -412,61 +500,22 @@ body {
     backdrop.setAttribute("aria-hidden", "true");
     backdrop.style.display = "none";
     
-    // 尝试播放背景音乐
-    bgMusic.volume = 0.4;
-    
-    // 使用用户交互来播放音乐
-    const playMusic = () => {
-      bgMusic.play().catch(err => {
-        console.log("音乐播放需要用户交互:", err);
-      });
-    };
-    
-    // 立即尝试播放
-    playMusic();
-    
-    // 添加一个提示，告诉用户可以点击页面播放音乐
-    const musicHint = document.createElement("div");
-    musicHint.className = "popup theme-green anim-bottom";
-    musicHint.style.cssText = `
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 10000;
-      width: 200px;
-      pointer-events: auto;
-      cursor: pointer;
-    `;
-    musicHint.innerHTML = `
-      <div class="header">
-        <span class="icon">🎵</span>
-        <span class="title">点击播放音乐</span>
-      </div>
-      <div class="content">轻柔钢琴曲</div>
-    `;
-    musicHint.addEventListener("click", () => {
-      playMusic();
-      musicHint.remove();
+    // 播放背景音乐
+    bgMusic.volume = 0.6; // 设置音量为60%
+    bgMusic.loop = true; // 循环播放
+    bgMusic.play().catch(err => {
+      console.log("音频播放失败:", err);
     });
-    layer.appendChild(musicHint);
     
+    // 允许下层点击无所谓，本场景主要是展示效果
     startSpawning();
   }
 
+  // 绑定事件
   confirmBtn.addEventListener("click", openGift);
-  
-  // 按Enter键也可以确认
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && backdrop.getAttribute("aria-hidden") === "false") {
-      openGift();
-    }
-  });
-  
-  // 点击背景也可以关闭（可选）
-  backdrop.addEventListener("click", (e) => {
-    if (e.target === backdrop) {
-      openGift();
-    }
+  // 保险：Enter 触发
+  backdrop.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") openGift();
   });
 })();
   </script>

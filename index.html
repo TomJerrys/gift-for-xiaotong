@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>一份神秘礼物</title>
+  <title>送给小彤的礼物</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600;800&display=swap" rel="stylesheet">
@@ -364,10 +364,14 @@ body {
     <div class="modal-backdrop" id="start-backdrop" aria-hidden="false">
       <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="titlebar">
-          <span class="icon">😈</span>
-          <span class="title" id="modal-title">神秘礼物</span>
+          <span class="icon">🎁</span>
+          <span class="title" id="modal-title">给小彤的礼物</span>
         </div>
-        <div class="content">亲爱的彤，送给你</div>
+        <div class="content">   
+	<p>亲爱的彤，</p>
+          <p>就像那天的大雪一样纯净美好，这份礼物送给你，希望你能感受到其中的温暖和心意。</p>
+          <p>愿你的每一天都充满阳光和欢笑，要天天开心哦！(/≧▽≦)/</p>
+	</div>
         <div class="actions">
           <button class="btn primary" id="confirm-btn" autofocus>确定</button>
         </div>
@@ -387,35 +391,32 @@ body {
   const layer = document.getElementById("popup-layer");
   const bgMusic = document.getElementById("bgMusic");
 
-  /**
-   * 温馨提示语（尽量去重、纠正引号并增强正向表达）
-   */
-  const messages = [
-    "多喝水哦~",
-    "保持微笑呀",
-    "每天都要元气满满",
-    "记得吃水果",
-    "保持好心情",
+   const messages = [
+    "愿你遍历山河，觉得人间值得",
+    "生活晴朗，万物可爱",
+    "今天也要加油鸭！",
+    "你是人间小可爱",
+    "累了就好好休息",
+    "记得按时吃饭",
+    "你是世间最温柔的星辰",
+    "愿所有美好，都如期而至",
     "好好爱自己",
-    "我想你了",
-    "我想你了",
+    "保持微笑",
+    "记得开心",
+    "你是最棒的",
     "梦想成真",
-    "期待下一次见面",
-    "金榜题名",
-    "金榜题名",
-    "别太累啦，偶尔偷懒也好",
-    "要相信自己奥",
-    "你超棒的",
-    "记得好好护肤",
-    "珍惜每一刻",
-    "学会爱自己，才能更好地爱别人",
-    "顺顺利利",
-    "早点休息",
-    "愿所有烦恼都消失",
-    "别熬夜",
-    "今天过得开心嘛",
-    "天冷了，多穿衣服",
+    "一切顺利",
+    "心想事成",
+    "平安喜乐",
+    "万事胜意",
+    "健康快乐",
+    "好运常伴",
+    "愿你的世界充满阳光",
+    "愿每天都有小确幸",
+    "愿你被温柔以待",
+    "愿你心中有爱，眼里有光"
   ];
+
 
   const themes = [
     "theme-blue", "theme-green", "theme-orange", "theme-purple",
@@ -451,7 +452,7 @@ body {
     icon.textContent = "💝"; // 礼物图标，兼容性更好
     const hTitle = document.createElement("span");
     hTitle.className = "title";
-    hTitle.textContent = "亲爱的彤";
+    hTitle.textContent = "给小彤的祝福";
     header.appendChild(icon);
     header.appendChild(hTitle);
 
